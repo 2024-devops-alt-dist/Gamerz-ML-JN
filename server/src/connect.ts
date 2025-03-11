@@ -1,6 +1,5 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
-const uri =
-  "mongodb+srv://gamerzAdmin:<db_password>@gamerz.breyi.mongodb.net/?retryWrites=true&w=majority&appName=gamerz";
+import { MongoClient, ServerApiVersion, Db } from "mongodb";
+const uri = process.env.MONGODB_URI || "mongodb+srv://gamerzAdmin:WBHY3JQx5Mk819s1@gamerz.breyi.mongodb.net/?retryWrites=true&w=majority&appName=gamerz";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -11,19 +10,23 @@ const client = new MongoClient(uri, {
   },
 });
 
-export default async function run() {
+let db: Db;
+
+export async function connectDB() {
   try {
-    // Connect the client to the server    (optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    db = client.db("gamerz");
+    console.log("Successfully connected to MongoDB!");
+    return db;
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    throw error;
   }
 }
 
-run().catch(console.dir);
+export function getDB() {
+  if (!db) {
+    throw new Error("Database not initialized");
+  }
+  return db;
+}
