@@ -1,19 +1,18 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { JSX } from "react";
+import { Route, Routes } from "react-router-dom";
+import WebLayout from "./pages/web/WebLayout";
+import Home from "./pages/web/Home";
 
-export default function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    axios.get("http://localhost:5000")
-      .then((res) => setMessage(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-
+export default function App(): JSX.Element {
   return (
-    <div>
-      <h1>React + Express + TypeScript</h1>
-      <p>{message}</p>
-    </div>
+    <Routes>
+      <Route path="/" element={<WebLayout />}>
+        <Route index element={<Home />} />
+        <Route path="discover" element={<div>Discover</div>} />
+        <Route path="support" element={<div>Support</div>} />
+        <Route path="careers" element={<div>Careers</div>} />
+        <Route path="*" element={<div>404 Not Found</div>} />
+      </Route>
+    </Routes>
   );
 }
