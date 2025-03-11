@@ -15,9 +15,9 @@ export const register = async (
     try {
         const { username, email, password, motivation } = req.body;
         const db = getDB();
-        const usersCollection = db.collection<User>("users");
+        const userCollection = db.collection<User>("user");
 
-        const existingUser = await usersCollection.findOne({ email });
+        const existingUser = await userCollection.findOne({ email });
         if (existingUser) {
             res.status(400).json({ message: "User already exists" });
             return;
@@ -35,7 +35,7 @@ export const register = async (
             createdAt: new Date(),
         };
 
-        const result = await usersCollection.insertOne(newUser);
+        const result = await userCollection.insertOne(newUser);
 
         const token = jwt.sign(
             { userId: result.insertedId },
@@ -64,9 +64,9 @@ export const login = async (
     try {
         const { email, password } = req.body;
         const db = getDB();
-        const usersCollection = db.collection<User>("users");
+        const userCollection = db.collection<User>("user");
 
-        const user = await usersCollection.findOne({ email });
+        const user = await userCollection.findOne({ email });
         if (!user) {
             res.status(400).json({ message: "Invalid credentials" });
             return;
@@ -91,7 +91,10 @@ export const login = async (
             maxAge: 24 * 60 * 60 * 1000
         });
 
-        res.json({ message: "Login successful" });
+        res.json({
+            message: "Login successful",
+            token: token // Add this line for testing and retrieve the token, but remove it in production
+        });
     } catch (error) {
         next(error);
     }
