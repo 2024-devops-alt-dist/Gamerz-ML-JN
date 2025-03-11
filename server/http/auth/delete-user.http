@@ -1,0 +1,4 @@
+### Delete user by ID
+DELETE {{baseUrl}}/users/67d042c79b0ccecbf7672dfb
+Content-Type: {{contentType}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2QwNDBiZjZmMThkMmRiZmMwM2E5MGMiLCJpYXQiOjE3NDE3MDEzMjgsImV4cCI6MTc0MTc4NzcyOH0.EZJVsiUEMeOH7K17D7NSe8WTAPHFF9R9Rc9ytf4XgSY
