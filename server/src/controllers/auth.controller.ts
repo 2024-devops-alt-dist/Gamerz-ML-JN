@@ -4,6 +4,8 @@ import { getDB } from "../connect";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../types/User";
+import {UserRole} from "../types/Role";
+import {TokenPayload} from "../types/auth";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
@@ -31,7 +33,7 @@ export const register = async (
             email,
             password: hashedPassword,
             motivation,
-            isApproved: false,
+            role: UserRole.VISITOR,
             createdAt: new Date(),
         };
 
@@ -79,7 +81,10 @@ export const login = async (
         }
 
         const token = jwt.sign(
-            { userId: user._id },
+            {
+                userId: user._id,
+                role: user.role
+            },
             JWT_SECRET,
             { expiresIn: "24h" }
         );
