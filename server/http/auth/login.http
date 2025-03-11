@@ -3,6 +3,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: {{contentType}}
 
 {
-    "email": "test@example.com",
+    "email": "jimmy@example.com",
     "password": "password123"
 }

@@ -3,7 +3,7 @@ POST {{baseUrl}}/auth/register
 Content-Type: {{contentType}}
 
 {
-    "email": "test@example.com",
+    "email": "jimmy123@example.com",
     "password": "password123",
     "username": "testuser",
     "motivation": "I want to join the community"
