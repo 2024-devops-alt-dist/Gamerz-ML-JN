@@ -1,0 +1,10 @@
+### Register new user
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+    "email": "test@example.com",
+    "password": "password123",
+    "username": "testuser",
+    "motivation": "I want to join the community"
+}

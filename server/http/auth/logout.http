@@ -1,0 +1,3 @@
+### Logout user
+POST {{baseUrl}}/auth/logout
+Content-Type: {{contentType}}
