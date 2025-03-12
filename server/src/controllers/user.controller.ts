@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction, Router} from "express";
+import {Request, Response, NextFunction} from "express";
 import { getDB } from "../connect";
 import { User } from "../types/User";
 import {ObjectId, WithId} from "mongodb";
@@ -43,7 +43,6 @@ export const approveUser = async (
             { _id: userId },
             {
                 $set: {
-                    isApproved: true,
                     role: UserRole.GAMER
                 }
             }
@@ -55,6 +54,36 @@ export const approveUser = async (
         }
 
         res.status(200).json({ message: "User approved and role updated" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const banUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const userId = new ObjectId(req.params.userId);
+        const db = getDB();
+        const usersCollection = db.collection<User>("user");
+
+        const result = await usersCollection.updateOne(
+            { _id: userId },
+            {
+                $set: {
+                    role: UserRole.BANNED
+                }
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        res.status(200).json({ message: "User is banned" });
     } catch (error) {
         next(error);
     }

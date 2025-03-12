@@ -1,4 +1,4 @@
-import {approveUser, deleteUser} from "../controllers/user.controller";
+import {approveUser, banUser, deleteUser} from "../controllers/user.controller";
 import {authenticate} from "../middleware/authenticate";
 import {Router} from "express";
 import {checkRole} from "../middleware/checkRole";
@@ -13,6 +13,13 @@ router.put(
     authenticate,
     checkRole([UserRole.ADMIN]),
     approveUser
+);
+
+router.put(
+    "/:userId/ban",
+    authenticate,
+    checkRole([UserRole.ADMIN]),
+    banUser
 );
 
 export default router
