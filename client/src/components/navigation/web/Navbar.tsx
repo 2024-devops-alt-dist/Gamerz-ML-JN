@@ -1,6 +1,6 @@
 import { JSX } from "react";
 import { Link } from "react-router-dom";
-import Logo from "../../assets/Logo_GamerZ_rmBG.png";
+import Logo from "../../../assets/Logo_GamerZ_rmBG.png";
 
 export default function Navbar(): JSX.Element {
     return (
@@ -31,7 +31,7 @@ export default function Navbar(): JSX.Element {
                 </ul>
             </div>
             <div className="navbar-end">
-                <Link to="/" className="btn btn-primary">Open GamerZ</Link>
+                <Link to="/app" className="btn btn-primary">Open GamerZ</Link>
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import { JSX } from "react";
-import Logo from "../../assets/Logo_GamerZ_rmBG.png";
+import Logo from "../../../assets/Logo_GamerZ_rmBG.png";
 
 export default function Footer(): JSX.Element {
     return (
