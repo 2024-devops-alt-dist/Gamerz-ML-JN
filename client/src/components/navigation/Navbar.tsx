@@ -1,5 +1,6 @@
 import { JSX } from "react";
 import { Link } from "react-router-dom";
+import Logo from "../../assets/Logo_GamerZ_rmBG.png";
 
 export default function Navbar(): JSX.Element {
     return (
@@ -17,7 +18,10 @@ export default function Navbar(): JSX.Element {
                         <li><Link to="/careers">Careers</Link></li>
                     </ul>
                 </div>
-                <Link to="/" className="btn btn-ghost text-xl">GamerZ</Link>
+                <Link to="/" className="btn btn-ghost text-xl">
+                    <img src={Logo} alt="GamerZ Industries Ltd." className="w-15 h-15" />
+                    GamerZ
+                </Link>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
