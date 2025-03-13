@@ -4,6 +4,7 @@ import { AuthProvider } from "./context/AuthContext";
 import WebLayout from "./pages/web/WebLayout";
 import Home from "./pages/web/Home";
 import AppLayout from "./pages/app/AppLayout";
+import Discover from "./pages/web/Discover";
 import ProtectedRoute from "./service/ProtectedRoute";
 import Discover from "./pages/web/Discover";
 
