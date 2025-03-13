@@ -11,12 +11,14 @@ export default function AppLayout(): JSX.Element {
     }
 
     return (
-        <div className="flex min-h-screen">
-            <Sidebar toggleDrawer={toggleDrawer} />
-            <Drawer isOpen={isDrawerOpen} />
-            <main className="flex-1 w-full">
-                <Outlet />
-            </main>
-        </div>
+        <>
+            <div className="flex min-h-screen">
+                <Sidebar toggleDrawer={toggleDrawer} />
+                <Drawer isOpen={isDrawerOpen} />
+                <main className="flex-1 w-full">
+                    <Outlet />
+                </main>
+            </div>
+        </>
     )
 }
