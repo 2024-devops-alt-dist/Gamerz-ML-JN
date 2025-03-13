@@ -5,9 +5,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../types/User";
 import {UserRole} from "../types/Role";
-import {TokenPayload} from "../types/auth";
+import dotenv from "dotenv";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+dotenv.config()
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 export const register = async (
     req: Request,
