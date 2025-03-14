@@ -1,12 +1,16 @@
 import { JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../../assets/Logo_GamerZ_rmBG.png";
+import { useAuth } from "../../../context/AuthContext";
 
 interface NavbarProps {
     onOpenLoginModal: () => void;
 }
 
 export default function Navbar({ onOpenLoginModal }: NavbarProps): JSX.Element {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
     return (
         <div className="navbar bg-base-100 shadow-sm">
             <div className="navbar-start">
@@ -36,7 +40,7 @@ export default function Navbar({ onOpenLoginModal }: NavbarProps): JSX.Element {
             </div>
             <div className="navbar-end">
                 <button
-                    onClick={onOpenLoginModal}
+                    onClick={user ? () => navigate("/app") : onOpenLoginModal}
                     className="btn btn-primary"
                 >
                     Open GamerZ

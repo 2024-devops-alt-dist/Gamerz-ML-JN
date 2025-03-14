@@ -1,9 +1,9 @@
-// client/src/components/form/LoginForm.tsx
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios, { AxiosError } from 'axios';
-import { useState } from 'react';
+import { AxiosError } from 'axios';
+import { JSX, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 const loginSchema = z.object({
     email: z.string().email('Invalid email address'),
@@ -12,13 +12,13 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-export const LoginForm = ({
+export default function LoginForm({
     onSuccess,
     onRegisterClick
 }: {
     onSuccess: () => void;
     onRegisterClick: () => void;
-}) => {
+}): JSX.Element {
     const {
         register,
         handleSubmit,
@@ -29,14 +29,11 @@ export const LoginForm = ({
 
     const [serverError, setServerError] = useState<string>('');
 
+    const { login } = useAuth();
+
     const onSubmit = async (data: LoginFormData) => {
         try {
-            await axios.post('http://localhost:3000/api/auth/login', data, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            await login(data.email, data.password);
             onSuccess();
         } catch (error) {
             if (error instanceof AxiosError) {
