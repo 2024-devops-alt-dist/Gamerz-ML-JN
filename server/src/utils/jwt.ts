@@ -4,16 +4,17 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || "";
 if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in the environment variables");
+  throw new Error("JWT_SECRET is not defined in the environment variables");
 }
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 export const verifyToken = async (token: string): Promise<TokenPayload> => {
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
-            if (err) reject(err);
-            resolve(decoded as TokenPayload);
-        });
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) reject(err);
+      resolve(decoded as TokenPayload);
     });
+  });
 };
