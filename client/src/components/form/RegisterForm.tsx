@@ -1,8 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 const registerSchema = z.object({
     username: z.string().min(3, 'Username must be at least 3 characters'),
@@ -15,6 +16,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
     const [serverError, setServerError] = useState<string>('');
+    const registerUser = useAuth().register;
 
     const {
         register,
@@ -26,21 +28,15 @@ export const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
     const onSubmit = async (data: RegisterFormData) => {
         try {
-            await axios.post('http://localhost:3000/api/auth/register', data,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type' : 'application/json'
-                    }
-                }
-            );
+            await registerUser(data.username, data.email, data.password, data.motivation);
             onSuccess();
         } catch (error) {
             if (error instanceof AxiosError) {
                 setServerError(error.response?.data?.message || 'Registration failed. Please try again.');
             } else {
                 setServerError('An unexpected error occurred');
-            }        }
+            }
+        }
     };
 
     return (
