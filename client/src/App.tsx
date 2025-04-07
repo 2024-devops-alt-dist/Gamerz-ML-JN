@@ -5,6 +5,9 @@ import WebLayout from "./pages/web/WebLayout";
 import Home from "./pages/web/Home";
 import AppLayout from "./pages/app/AppLayout";
 import ProtectedRoute from "./service/ProtectedRoute";
+import Discover from "./pages/web/Discover";
+import Support from "./pages/web/Support";
+import Careers from "./pages/web/Careers";
 
 export default function App(): JSX.Element {
   return (
@@ -12,9 +15,9 @@ export default function App(): JSX.Element {
       <Routes>
         <Route path="/" element={<WebLayout />}>
           <Route index element={<Home />} />
-          <Route path="discover" element={<div>Discover</div>} />
-          <Route path="support" element={<div>Support</div>} />
-          <Route path="careers" element={<div>Careers</div>} />
+          <Route path="discover" element={<Discover />} />
+          <Route path="support" element={<Support />} />
+          <Route path="careers" element={<Careers />} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Route>
 
