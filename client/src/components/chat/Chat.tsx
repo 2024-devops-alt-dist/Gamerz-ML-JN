@@ -1,14 +1,13 @@
-// src/components/Chat.tsx
-import { useState } from "react";
-import { useChatStore } from "../../store/chatStore";
+import {useState} from "react";
+import {useChatStore} from "../../store/chatStore";
 
 interface ChatProps {
     userId: string;
     username: string;
 }
 
-export const Chat = ({ userId, username }: ChatProps) => {
-    const { currentChannel, messages, sendMessage } = useChatStore();
+export const Chat = ({userId, username}: ChatProps) => {
+    const {currentChannel, messages, sendMessage} = useChatStore();
     const [messageText, setMessageText] = useState("");
 
     const channelMessages = currentChannel ? messages[currentChannel] || [] : [];
