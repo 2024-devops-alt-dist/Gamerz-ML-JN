@@ -22,8 +22,9 @@ export default function App(): JSX.Element {
         </Route>
 
         {/* Protected route */}
-        <Route path="/app" element={<ProtectedRoute />}>
-          <Route index element={<AppLayout />} />
+        <Route path="/app/" element={<AppLayout />}>
+          <Route index element={<ProtectedRoute />} />
+          {/*<Route path="chat" element={<ChatPage />} />*/}
         </Route>
       </Routes>
     </AuthProvider>
