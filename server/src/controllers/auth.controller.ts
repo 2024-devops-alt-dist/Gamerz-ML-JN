@@ -83,6 +83,7 @@ export const login = async (
       {
         userId: user._id,
         role: user.role,
+        username: user.username
       },
       JWT_SECRET,
       { expiresIn: "24h" }

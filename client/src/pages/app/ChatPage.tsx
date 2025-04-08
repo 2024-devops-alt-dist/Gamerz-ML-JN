@@ -30,7 +30,7 @@ export const ChatPage = () => {
                     <ChannelList />
                 </aside>
                 <main className="main-content">
-                    <Chat userId={user.email} username={user.email} />
+                    <Chat userId={user.userId} username={user.username} />
                 </main>
             </div>
         </div>

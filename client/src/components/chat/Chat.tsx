@@ -33,7 +33,7 @@ export const Chat = ({ userId, username }: ChatProps) => {
                 ) : (
                     channelMessages.map((msg) => (
                         <div key={msg._id} className={`message ${msg.userId === userId ? "own" : ""}`}>
-                            <span className="username">{msg.username}</span>
+                            <span className="username accent-red-100 w-10">{msg.username}</span>
                             <p className="content">{msg.content}</p>
                             <span className="timestamp">
                 {new Date(msg.createdAt).toLocaleTimeString()}

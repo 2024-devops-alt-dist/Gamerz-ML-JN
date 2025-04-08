@@ -3,7 +3,12 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
-    user: { email: string; role: "gamer" | "admin" } | null;
+    user: {
+        email: string
+        role: "gamer" | "admin"
+        userId: string
+        username: string
+    } | null;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (username: string, email: string, password: string, motivation: string) => Promise<void>;
@@ -31,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             );
             console.log("login response:", res.data);
             setUser(res.data.user);
-            navigate("/app"); // Rediriger après connexion
+            navigate("/app");
         } catch (error) {
             console.error('Login failed:', error);
         }
