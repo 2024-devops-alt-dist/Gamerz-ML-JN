@@ -6,12 +6,13 @@ import axios from "axios";
 export const ChannelList = () => {
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
     const [loading, setLoading] = useState(false);
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchChannels = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get("http://localhost:3000/api/channels", {
+                const response = await axios.get(`${API_URL}/api/channels`, {
                     withCredentials: true,
                     // headers: {
                     //     'Content-Type': 'application/json'
