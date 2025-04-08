@@ -35,7 +35,7 @@ app.use(
         },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: ["Content-Type"],
     })
 );
 
@@ -52,7 +52,7 @@ const io = new Server(httpServer, {
         },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: ["Content-Type"],
     }
 });
 
