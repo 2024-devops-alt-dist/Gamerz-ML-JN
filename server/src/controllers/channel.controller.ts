@@ -1,4 +1,3 @@
-// controllers/channel.controller.ts
 import { Request, Response } from 'express';
 import { getDB } from '../connect';
 import { Channel } from '../types/Channel';
