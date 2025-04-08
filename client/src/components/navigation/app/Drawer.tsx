@@ -6,7 +6,7 @@ interface DrawerProps {
 
 export default function Drawer({ isOpen }: DrawerProps): JSX.Element {
     return (
-        <div className={`drawer ${isOpen ? "drawer-open" : ""}`}>
+        <div className={`drawer ${isOpen ? "drawer-open" : ""} w-0`}>
             <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={isOpen} readOnly />
             <div className="drawer-side transition-transform duration-300 ease-out transform translate-x-0">
                 <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>

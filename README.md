@@ -1,4 +1,5 @@
-# API Testing Requests
+git add server/src/controllers/channel.controller.ts server/src/routes/channel.routes.ts server/http/channel/getChannels.http
+git commit -m "Add channel API endpoints and controller"# API Testing Requests
 
 This directory contains HTTP request files for testing the API endpoints.
 

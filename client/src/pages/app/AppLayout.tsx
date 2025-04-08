@@ -2,6 +2,7 @@ import { JSX, useState } from "react";
 import Sidebar from "../../components/navigation/app/Sidebar";
 import Drawer from "../../components/navigation/app/Drawer";
 import { Outlet } from "react-router";
+import {ChatPage} from "./ChatPage.tsx";
 
 export default function AppLayout(): JSX.Element {
     const [isDrawerOpen, setIsDrawerOpen] = useState(true);
@@ -17,6 +18,7 @@ export default function AppLayout(): JSX.Element {
                 <Drawer isOpen={isDrawerOpen} />
                 <main className="flex-1 w-full">
                     <Outlet />
+                    <ChatPage />
                 </main>
             </div>
         </>

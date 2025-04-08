@@ -1,0 +1,8 @@
+### Create a channel
+POST {{baseUrl}}/channels
+Content-Type: {{contentType}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2QwNWM3ZjczODdiNjc3NzkyYzFjZGYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDQwMTUzMjIsImV4cCI6MTc0NDEwMTcyMn0.DIUjX2CPz4XIIh9KY8QhlvkRPEzhpQAKTHhhO-uGqzY
+
+{
+    "name": "nameChannel"
+}
