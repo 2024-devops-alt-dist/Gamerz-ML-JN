@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 interface AuthContextType {
     user: {
         email: string
-        role: "gamer" | "admin" | "visitor"
+        role: "gamer" | "admin" | "visitor" | "banned"
         userId: string
         username: string
     } | null;

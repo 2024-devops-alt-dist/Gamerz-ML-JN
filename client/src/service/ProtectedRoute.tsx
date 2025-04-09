@@ -4,9 +4,9 @@ import { useAuth } from "../context/AuthContext";
 export default function ProtectedRoute() {
     const { user } = useAuth();
 
-    if (!user) {
+    if (!user || user.role == 'banned') {
         return <Navigate to="/" replace />;
-    }
-
+    } else if (user.role == 'gamer' || user.role == 'admin') {
     return <Outlet />;
+    }
 }
