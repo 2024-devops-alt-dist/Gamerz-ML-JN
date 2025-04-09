@@ -17,7 +17,6 @@ export const ChatPage = () => {
     }, [connect, disconnect]);
 
     if (!user) {
-        console.log(user)
         return <div>Please log in to access the chat</div>;
     }
 
