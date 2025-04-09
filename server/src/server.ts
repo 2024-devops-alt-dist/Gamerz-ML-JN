@@ -13,13 +13,12 @@ import {setupChatSocket} from "./socket/chat.socket";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const httpServer = createServer(app);
 
 const allowedOrigins = [
     process.env.CLIENT_URL,
     "http://127.0.0.1:5173",
-    "http://localhost:5173",
 ]
     // .filter(Boolean)
 ;
@@ -68,8 +67,8 @@ app.use("/api/channels", channelRoutes);
 
 connectDB()
     .then(() => {
-        httpServer.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
+        httpServer.listen(PORT, '127.0.0.1', () => {
+            console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
         });
     })
     .catch((err) => {
