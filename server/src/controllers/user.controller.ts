@@ -1,8 +1,8 @@
-import {Request, Response, NextFunction} from "express";
+import { Request, Response, NextFunction } from "express";
 import { getDB } from "../connect";
 import { User } from "../types/User";
-import {ObjectId, WithId} from "mongodb";
-import {UserRole} from "../types/Role";
+import { ObjectId, WithId } from "mongodb";
+import { UserRole } from "../types/Role";
 
 export const deleteUser = async (
     req: Request,
@@ -88,3 +88,14 @@ export const banUser = async (
         next(error);
     }
 };
+
+export const getUsers = async (req: Request, res: Response) => {
+    try {
+        const db = getDB();
+        const usersCollection = db.collection<User>("user");
+        const users = await usersCollection.find().toArray();
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch users" });
+    }
+}

@@ -8,6 +8,7 @@ import ProtectedRoute from "./service/ProtectedRoute";
 import Discover from "./pages/web/Discover";
 import Support from "./pages/web/Support";
 import Careers from "./pages/web/Careers";
+import { ChatPage } from "./pages/app/ChatPage";
 
 export default function App(): JSX.Element {
   return (
@@ -23,8 +24,9 @@ export default function App(): JSX.Element {
 
         {/* Protected route */}
         <Route path="/app/" element={<AppLayout />}>
-          <Route index element={<ProtectedRoute />} />
-          {/*<Route path="chat" element={<ChatPage />} />*/}
+          <Route element={<ProtectedRoute />}>
+            <Route index element={<ChatPage />} />
+          </Route>
         </Route>
       </Routes>
     </AuthProvider>
