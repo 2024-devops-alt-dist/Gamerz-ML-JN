@@ -99,7 +99,10 @@ export const login = async (
     res.json({
       message: "Login successful",
       token: token, // Add this line for testing and retrieve the token, but remove it in production
-      user: { username: user.username, role: user.role },
+      user: {
+        username: user.username,
+        role: user.role,
+        userId: user._id },
     });
   } catch (error) {
     next(error);
