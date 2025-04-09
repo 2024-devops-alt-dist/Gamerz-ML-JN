@@ -4,9 +4,10 @@ import axios from "axios";
 
 interface DrawerProps {
     isOpen: boolean;
+    isAdminPanelUserisOpen: boolean;
 }
 
-export default function Drawer({ isOpen }: DrawerProps): JSX.Element {
+export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps): JSX.Element {
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
     const [loading, setLoading] = useState(false);
     const API_URL = import.meta.env.VITE_API_URL;
@@ -37,20 +38,29 @@ export default function Drawer({ isOpen }: DrawerProps): JSX.Element {
             <div className="drawer-side">
                 <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                 <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-                    <li>
-                        <h2 className="menu-title">Channels</h2>
-                        <ul>
-                            {channels.map((channel) => (
-                                <li
-                                    key={channel._id}
-                                    className={channel._id === currentChannel ? "active" : ""}
-                                    onClick={() => channel._id && joinChannel(channel._id)}
-                                >
-                                    {channel.name}
-                                </li>
-                            ))}
-                        </ul>
-                    </li>
+                    {isAdminPanelUserisOpen ? (
+                        <li>
+                            <h2 className="menu-title">Users</h2>
+                            <ul>
+                                <li>User 1</li>
+                            </ul>
+                        </li>
+                    ) : (
+                        <li>
+                            <h2 className="menu-title">Channels</h2>
+                            <ul>
+                                {channels.map((channel) => (
+                                    <li
+                                        key={channel._id}
+                                        className={channel._id === currentChannel ? "active" : ""}
+                                        onClick={() => channel._id && joinChannel(channel._id)}
+                                    >
+                                        {channel.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        </li>
+                    )}
                 </ul>
             </div>
         </div>
