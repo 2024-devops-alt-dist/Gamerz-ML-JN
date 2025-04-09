@@ -1,6 +1,7 @@
 import { JSX, useEffect, useState } from "react";
 import { useChatStore } from "../../../store/chatStore";
 import axios from "axios";
+import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
 
 interface DrawerProps {
     isOpen: boolean;
@@ -59,15 +60,42 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                     {isAdminPanelUserisOpen ? (
                         <li>
                             <h2 className="menu-title">Users</h2>
-                            <ul>
-                                {users.map((user) => (
-                                    <li
-                                        key={user._id}
-                                    >
-                                        {user.username}
-                                    </li>
-                                ))}                            
-                            </ul>
+                            <details open>
+                                <summary>Visitor</summary>
+                                <ul>
+                                    {users
+                                        .filter((user) => user.role === "visitor")
+                                        .map((user) => (
+                                        <div className="flex justify-between items-center">
+                                            <li key={user._id} className="my-1">{user.username}</li>
+                                            <FaCircleCheck size={18} className="mr-1"/>
+                                        </div>
+                                    ))}                            
+                                </ul>
+                            </details>
+                            <details open={false}>
+                                <summary>GamerZ</summary>
+                                <ul>
+                                    {users
+                                        .filter((user) => user.role === "gamer")
+                                        .map((user) => (
+                                        <div className="flex justify-between items-center">
+                                            <li key={user._id} className="my-1">{user.username}</li>
+                                            <FaCircleXmark size={18} className="mr-1" color="red"/>
+                                        </div>
+                                    ))}                            
+                                </ul>
+                            </details>
+                            <details open={false}>
+                                <summary>Banned</summary>
+                                <ul>
+                                    {users
+                                        .filter((user) => user.role === "banned")
+                                        .map((user) => (
+                                        <li key={user._id} className="my-1">{user.username}</li>
+                                    ))}                            
+                                </ul>
+                            </details>
                         </li>
                     ) : (
                         <li>
