@@ -51,6 +51,40 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         fetchUsers();
     }, [setUsers]);
 
+    const handleValidateUser = async (userId: string) => {
+        try {
+            await axios.put(
+                `${API_URL}/api/users/${userId}/approve`,
+                {},
+                { withCredentials: true, }
+            );
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user._id === userId ? { ...user, role: "gamer"} : user
+                )
+            );
+        } catch (error) {
+            console.error("Failed to validate user :", error);
+        }
+    };
+
+    const handleBanUser = async (userId: string) => {
+        try {
+            await axios.put(
+                `${API_URL}/api/users/${userId}/ban`,
+                {},
+                { withCredentials: true, }
+            );
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user._id === userId ? { ...user, role: "banned"} : user
+                )
+            );
+        } catch (error) {
+            console.error("Failed to ban user :", error);
+        }
+    };
+
     return (
         <div className={`drawer ${isOpen ? "drawer-open w-full max-w-xs" : "w-0"} `}>
             <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={isOpen} readOnly />
@@ -68,7 +102,9 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                                         .map((user) => (
                                         <div className="flex justify-between items-center">
                                             <li key={user._id} className="my-1">{user.username}</li>
-                                            <FaCircleCheck size={18} className="mr-1"/>
+                                            <button onClick={() => handleValidateUser(user._id)} title="Validate user">
+                                                <FaCircleCheck size={18} className="mr-1"/>
+                                            </button>
                                         </div>
                                     ))}                            
                                 </ul>
@@ -81,7 +117,9 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                                         .map((user) => (
                                         <div className="flex justify-between items-center">
                                             <li key={user._id} className="my-1">{user.username}</li>
-                                            <FaCircleXmark size={18} className="mr-1" color="red"/>
+                                            <button onClick={() => handleBanUser(user._id)} title="Ban user">
+                                                <FaCircleXmark size={18} className="mr-1" color="red"/>
+                                            </button>
                                         </div>
                                     ))}                            
                                 </ul>
