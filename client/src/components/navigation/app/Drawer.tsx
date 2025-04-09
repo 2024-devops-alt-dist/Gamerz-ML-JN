@@ -7,30 +7,48 @@ interface DrawerProps {
     isAdminPanelUserisOpen: boolean;
 }
 
+interface User {
+    _id: string;
+    username: string;
+    email: string;
+    role: string;
+    createdAt: Date;
+}
+
 export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps): JSX.Element {
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
-    const [loading, setLoading] = useState(false);
     const API_URL = import.meta.env.VITE_API_URL;
+    const [ users, setUsers ] = useState<User[]>([]);
 
     useEffect(() => {
         const fetchChannels = async () => {
             try {
-                setLoading(true);
                 const response = await axios.get(`${API_URL}/api/channels`, {
                     withCredentials: true,
                 });
                 setChannels(response.data);
             } catch (error) {
                 console.error("Failed to fetch channels:", error);
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchChannels();
     }, [setChannels]);
 
-    if (loading) return <div>Loading channels...</div>;
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/api/users`, {
+                    withCredentials: true,
+                });
+                setUsers(response.data);
+            } catch (error) {
+                console.error("Failed to fetch users:", error);
+            }
+        };
+
+        fetchUsers();
+    }, [setUsers]);
 
     return (
         <div className={`drawer ${isOpen ? "drawer-open w-full max-w-xs" : "w-0"} `}>
@@ -42,7 +60,13 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                         <li>
                             <h2 className="menu-title">Users</h2>
                             <ul>
-                                <li>User 1</li>
+                                {users.map((user) => (
+                                    <li
+                                        key={user._id}
+                                    >
+                                        {user.username}
+                                    </li>
+                                ))}                            
                             </ul>
                         </li>
                     ) : (
