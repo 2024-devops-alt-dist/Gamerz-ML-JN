@@ -2,6 +2,7 @@ import { JSX, useEffect, useState } from "react";
 import { useChatStore } from "../../../store/chatStore";
 import axios from "axios";
 import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
+import ConfirmActionModal from "./ConfirmActionModal";
 
 interface DrawerProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface User {
     _id: string;
     username: string;
     email: string;
+    motivation: string;
     role: string;
     createdAt: Date;
 }
@@ -19,7 +21,7 @@ interface User {
 interface UserGroupProps {
     role: string;
     users: User[];
-    onAction: (userId: string) => void;
+    action: "validate" | "ban";
     icon: JSX.Element;
 };
 
@@ -27,6 +29,12 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
     const API_URL = import.meta.env.VITE_API_URL;
     const [ users, setUsers ] = useState<User[]>([]);
+    const [confirmationModal, setConfirmationModal] = useState<{
+        userId: string;
+        username: string;
+        motivation: string;
+        action: "validate" | "ban";
+    } | null>(null);
 
     useEffect(() => {
         const fetchChannels = async () => {
@@ -92,14 +100,32 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         }
     };
 
-    const UserGroup = ({ role, users, onAction, icon }: UserGroupProps) => (
+    const handleConfirm = (userId: string, action: "validate" | "ban") => {
+        if (action === "validate") {
+            handleValidateUser(userId);
+        } else {
+            handleBanUser(userId);
+        }
+    };
+
+    const UserGroup = ({ role, users, action, icon }: UserGroupProps) => (
             <ul>
                 {users
                 .filter((user) => user.role === role)
                 .map((user) => (
                     <div key={user._id} className="flex justify-between items-center">
                     <li className="my-1">{user.username}</li>
-                    <button onClick={() => onAction(user._id)}>
+                    <button
+                        onClick={() => {
+                            setConfirmationModal({
+                            userId: user._id,
+                            username: user.username,
+                            motivation: user.motivation,
+                            action: action,
+                            });
+                            (document.getElementById("confirmModal") as HTMLDialogElement).showModal();
+                        }}
+                    >
                         {icon}
                     </button>
                     </div>
@@ -121,7 +147,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                                 <UserGroup
                                     role="visitor"
                                     users={users}
-                                    onAction={handleValidateUser}
+                                    action="validate"
                                     icon={<FaCircleCheck size={18} className="mr-1" />}
                                 />
                             </details>
@@ -131,7 +157,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                                 <UserGroup
                                     role="gamer"
                                     users={users}
-                                    onAction={handleBanUser}
+                                    action="ban"
                                     icon={<FaCircleXmark size={18} className="mr-1" color="red" />}
                                 />
                             </details>
@@ -141,7 +167,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                                 <UserGroup
                                     role="banned"
                                     users={users}
-                                    onAction={handleValidateUser}
+                                    action="validate"
                                     icon={<FaCircleCheck size={18} className="mr-1" />}
                                 />
                             </details>
@@ -165,6 +191,14 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                     )}
                 </ul>
             </div>
+            <ConfirmActionModal
+                confirmationModal={confirmationModal}
+                onConfirm={handleConfirm}
+                onClose={() => {
+                    setConfirmationModal(null);
+                    (document.getElementById("confirmModal") as HTMLDialogElement).close();
+                }}
+            />
         </div>
     )
 }
