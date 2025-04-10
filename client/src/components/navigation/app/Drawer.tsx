@@ -1,7 +1,9 @@
 import { JSX, useEffect, useState } from "react";
 import { useChatStore } from "../../../store/chatStore";
+import { useToast } from "../../../context/ToastContext";
 import axios from "axios";
 import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
+import ConfirmActionModal from "./ConfirmActionModal";
 
 interface DrawerProps {
     isOpen: boolean;
@@ -12,14 +14,29 @@ interface User {
     _id: string;
     username: string;
     email: string;
+    motivation: string;
     role: string;
     createdAt: Date;
 }
+
+interface UserGroupProps {
+    role: string;
+    users: User[];
+    action: "validate" | "ban";
+    icon: JSX.Element;
+};
 
 export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps): JSX.Element {
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
     const API_URL = import.meta.env.VITE_API_URL;
     const [ users, setUsers ] = useState<User[]>([]);
+    const [confirmationModal, setConfirmationModal] = useState<{
+        userId: string;
+        username: string;
+        motivation: string;
+        action: "validate" | "ban";
+    } | null>(null);
+    const { show } = useToast();
 
     useEffect(() => {
         const fetchChannels = async () => {
@@ -34,7 +51,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         };
 
         fetchChannels();
-    }, [setChannels]);
+    }, []);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -49,41 +66,90 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         };
 
         fetchUsers();
-    }, [setUsers]);
+    }, []);
 
     const handleValidateUser = async (userId: string) => {
         try {
+            // Call to back-end
             await axios.put(
                 `${API_URL}/api/users/${userId}/approve`,
                 {},
                 { withCredentials: true, }
             );
+
+            // Refresh State User
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user._id === userId ? { ...user, role: "gamer"} : user
                 )
             );
+
+            // Toast
+            const user = users.find((u) => u._id === userId);
+            show(`✅ ${user?.username || "Utilisateur"} validé`, "success");
         } catch (error) {
             console.error("Failed to validate user :", error);
+            show("❌ Erreur lors de la validation", "error");
         }
     };
 
     const handleBanUser = async (userId: string) => {
         try {
+            // Call to back-end
             await axios.put(
                 `${API_URL}/api/users/${userId}/ban`,
                 {},
                 { withCredentials: true, }
             );
+
+            // Refresh State User
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user._id === userId ? { ...user, role: "banned"} : user
                 )
             );
+
+            // Toast
+            const user = users.find((u) => u._id === userId);
+            show(`🚫 ${user?.username || "Utilisateur"} banni`, "success");
         } catch (error) {
             console.error("Failed to ban user :", error);
+            show("❌ Erreur lors du bannissement", "error");
         }
     };
+
+    const handleConfirm = (userId: string, action: "validate" | "ban") => {
+        if (action === "validate") {
+            handleValidateUser(userId);
+        } else {
+            handleBanUser(userId);
+        }
+    };
+
+    const UserGroup = ({ role, users, action, icon }: UserGroupProps) => (
+            <ul>
+                {users
+                .filter((user) => user.role === role)
+                .map((user) => (
+                    <div key={user._id} className="flex justify-between items-center">
+                    <li className="my-1">{user.username}</li>
+                    <button
+                        onClick={() => {
+                            setConfirmationModal({
+                            userId: user._id,
+                            username: user.username,
+                            motivation: user.motivation,
+                            action: action,
+                            });
+                            (document.getElementById("confirmModal") as HTMLDialogElement).showModal();
+                        }}
+                    >
+                        {icon}
+                    </button>
+                    </div>
+                ))}
+            </ul>
+    );
 
     return (
         <div className={`drawer ${isOpen ? "drawer-open w-full max-w-xs" : "w-0"} `}>
@@ -96,44 +162,34 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                             <h2 className="menu-title">Users</h2>
                             <details open>
                                 <summary>Visitor</summary>
-                                <ul>
-                                    {users
-                                        .filter((user) => user.role === "visitor")
-                                        .map((user) => (
-                                        <div className="flex justify-between items-center">
-                                            <li key={user._id} className="my-1">{user.username}</li>
-                                            <button onClick={() => handleValidateUser(user._id)} title="Validate user">
-                                                <FaCircleCheck size={18} className="mr-1"/>
-                                            </button>
-                                        </div>
-                                    ))}                            
-                                </ul>
+                                <UserGroup
+                                    role="visitor"
+                                    users={users}
+                                    action="validate"
+                                    icon={<FaCircleCheck size={18} className="mr-1" />}
+                                />
                             </details>
+
                             <details open={false}>
                                 <summary>GamerZ</summary>
-                                <ul>
-                                    {users
-                                        .filter((user) => user.role === "gamer")
-                                        .map((user) => (
-                                        <div className="flex justify-between items-center">
-                                            <li key={user._id} className="my-1">{user.username}</li>
-                                            <button onClick={() => handleBanUser(user._id)} title="Ban user">
-                                                <FaCircleXmark size={18} className="mr-1" color="red"/>
-                                            </button>
-                                        </div>
-                                    ))}                            
-                                </ul>
+                                <UserGroup
+                                    role="gamer"
+                                    users={users}
+                                    action="ban"
+                                    icon={<FaCircleXmark size={18} className="mr-1" color="red" />}
+                                />
                             </details>
+
                             <details open={false}>
                                 <summary>Banned</summary>
-                                <ul>
-                                    {users
-                                        .filter((user) => user.role === "banned")
-                                        .map((user) => (
-                                        <li key={user._id} className="my-1">{user.username}</li>
-                                    ))}                            
-                                </ul>
+                                <UserGroup
+                                    role="banned"
+                                    users={users}
+                                    action="validate"
+                                    icon={<FaCircleCheck size={18} className="mr-1" />}
+                                />
                             </details>
+
                         </li>
                     ) : (
                         <li>
@@ -153,6 +209,14 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                     )}
                 </ul>
             </div>
+            <ConfirmActionModal
+                confirmationModal={confirmationModal}
+                onConfirm={handleConfirm}
+                onClose={() => {
+                    setConfirmationModal(null);
+                    (document.getElementById("confirmModal") as HTMLDialogElement).close();
+                }}
+            />
         </div>
     )
 }

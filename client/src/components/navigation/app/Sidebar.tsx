@@ -1,16 +1,16 @@
 import { JSX } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../../../assets/Logo_GamerZ_rmBG.png";
-import Logout from "../../../assets/logout.png";
-import AdminPanelUser from "../../../assets/user.png";
 import { useAuth } from "../../../context/AuthContext";
+import { FaRegCircleUser, FaCircleArrowLeft, FaPowerOff } from "react-icons/fa6";
 
 interface SidebarProps {
     toggleDrawer: () => void;
+    isAdminPanelUserisOpen: boolean;
     toggleAdminPanelUser: () => void;
 }
 
-export default function Sidebar({ toggleDrawer, toggleAdminPanelUser }: SidebarProps): JSX.Element {
+export default function Sidebar({ toggleDrawer, isAdminPanelUserisOpen, toggleAdminPanelUser }: SidebarProps): JSX.Element {
     const { user, logout } = useAuth();
 
     return (
@@ -21,7 +21,11 @@ export default function Sidebar({ toggleDrawer, toggleAdminPanelUser }: SidebarP
                 </button>
                 {user && user.role === "admin" ? (
                     <button onClick={toggleAdminPanelUser} className="btn btn-ghost drawer-button w-full mb-5">
-                        <img src={AdminPanelUser} alt="Admin Panel User" className="w-7 h-7" />
+                        {isAdminPanelUserisOpen === false ? (
+                            <FaRegCircleUser size={30} color="white" />
+                        ) : (
+                            <FaCircleArrowLeft size={30} color="white" />
+                        )}
                     </button>
                 ) : (
                     <></>
@@ -29,7 +33,7 @@ export default function Sidebar({ toggleDrawer, toggleAdminPanelUser }: SidebarP
             </div>
             <div>
                 <button className="btn btn-ghost w-full mb-5" onClick={logout}>
-                    <img src={Logout} alt="Logout" className="w-10 h-10" />
+                    <FaPowerOff size={30} color="white" />
                 </button>
                 <Link to="/" className="btn btn-ghost mb-5">
                     <img src={Logo} alt="GamerZ Industries Ltd." className="w-15 h-15" />

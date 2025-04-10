@@ -16,14 +16,12 @@ export default function AppLayout(): JSX.Element {
     }
 
     return (
-        <>
-            <div className="flex min-h-screen">
-                <Sidebar toggleDrawer={toggleDrawer} toggleAdminPanelUser={toggleAdminPanelUser} />
-                <Drawer isOpen={isDrawerOpen} isAdminPanelUserisOpen={isAdminPanelUserisOpen} />
-                <main className="flex-1 w-full">
-                    <Outlet />
-                </main>
-            </div>
-        </>
+        <div className="flex min-h-screen">
+            <Sidebar toggleDrawer={toggleDrawer} isAdminPanelUserisOpen={isAdminPanelUserisOpen} toggleAdminPanelUser={toggleAdminPanelUser} />
+            <Drawer isOpen={isDrawerOpen} isAdminPanelUserisOpen={isAdminPanelUserisOpen} />
+            <main className="flex-1 w-full">
+                <Outlet />
+            </main>
+        </div>
     )
 }
