@@ -17,13 +17,11 @@ interface User {
 }
 
 interface UserGroupProps {
-    title: string;
     role: string;
     users: User[];
     onAction: (userId: string) => void;
     icon: JSX.Element;
-    detailsOpen?: boolean;
-  };
+};
 
 export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps): JSX.Element {
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
@@ -94,22 +92,19 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         }
     };
 
-    const UserGroup = ({ title, role, users, onAction, icon, detailsOpen = false }: UserGroupProps) => (
-        <details open={detailsOpen}>
-            <summary>{title}</summary>
+    const UserGroup = ({ role, users, onAction, icon }: UserGroupProps) => (
             <ul>
                 {users
                 .filter((user) => user.role === role)
                 .map((user) => (
                     <div key={user._id} className="flex justify-between items-center">
                     <li className="my-1">{user.username}</li>
-                    <button onClick={() => onAction(user._id)} title={`${title} action`}>
+                    <button onClick={() => onAction(user._id)}>
                         {icon}
                     </button>
                     </div>
                 ))}
             </ul>
-        </details>
     );
 
     return (
@@ -121,27 +116,36 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                     {isAdminPanelUserisOpen ? (
                         <li>
                             <h2 className="menu-title">Users</h2>
-                            <UserGroup
-                                title="Visitor"
-                                role="visitor"
-                                users={users}
-                                onAction={handleValidateUser}
-                                icon={<FaCircleCheck size={18} className="mr-1" />}
-                            />
-                            <UserGroup
-                                title="GamerZ"
-                                role="gamer"
-                                users={users}
-                                onAction={handleBanUser}
-                                icon={<FaCircleXmark size={18} className="mr-1" color="red" />}
-                            />
-                            <UserGroup
-                                title="Banned"
-                                role="banned"
-                                users={users}
-                                onAction={handleValidateUser}
-                                icon={<FaCircleCheck size={18} className="mr-1" />}
-                            />
+                            <details open>
+                                <summary>Visitor</summary>
+                                <UserGroup
+                                    role="visitor"
+                                    users={users}
+                                    onAction={handleValidateUser}
+                                    icon={<FaCircleCheck size={18} className="mr-1" />}
+                                />
+                            </details>
+
+                            <details open={false}>
+                                <summary>GamerZ</summary>
+                                <UserGroup
+                                    role="gamer"
+                                    users={users}
+                                    onAction={handleBanUser}
+                                    icon={<FaCircleXmark size={18} className="mr-1" color="red" />}
+                                />
+                            </details>
+
+                            <details open={false}>
+                                <summary>Banned</summary>
+                                <UserGroup
+                                    role="banned"
+                                    users={users}
+                                    onAction={handleValidateUser}
+                                    icon={<FaCircleCheck size={18} className="mr-1" />}
+                                />
+                            </details>
+
                         </li>
                     ) : (
                         <li>
