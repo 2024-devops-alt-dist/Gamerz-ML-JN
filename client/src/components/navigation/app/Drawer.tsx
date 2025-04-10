@@ -1,5 +1,6 @@
 import { JSX, useEffect, useState } from "react";
 import { useChatStore } from "../../../store/chatStore";
+import { useToast } from "../../../context/ToastContext";
 import axios from "axios";
 import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
 import ConfirmActionModal from "./ConfirmActionModal";
@@ -35,6 +36,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         motivation: string;
         action: "validate" | "ban";
     } | null>(null);
+    const { show } = useToast();
 
     useEffect(() => {
         const fetchChannels = async () => {
@@ -68,35 +70,51 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
 
     const handleValidateUser = async (userId: string) => {
         try {
+            // Call to back-end
             await axios.put(
                 `${API_URL}/api/users/${userId}/approve`,
                 {},
                 { withCredentials: true, }
             );
+
+            // Refresh State User
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user._id === userId ? { ...user, role: "gamer"} : user
                 )
             );
+
+            // Toast
+            const user = users.find((u) => u._id === userId);
+            show(`✅ ${user?.username || "Utilisateur"} validé`, "success");
         } catch (error) {
             console.error("Failed to validate user :", error);
+            show("❌ Erreur lors de la validation", "error");
         }
     };
 
     const handleBanUser = async (userId: string) => {
         try {
+            // Call to back-end
             await axios.put(
                 `${API_URL}/api/users/${userId}/ban`,
                 {},
                 { withCredentials: true, }
             );
+
+            // Refresh State User
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user._id === userId ? { ...user, role: "banned"} : user
                 )
             );
+
+            // Toast
+            const user = users.find((u) => u._id === userId);
+            show(`🚫 ${user?.username || "Utilisateur"} banni`, "success");
         } catch (error) {
             console.error("Failed to ban user :", error);
+            show("❌ Erreur lors du bannissement", "error");
         }
     };
 
