@@ -1,4 +1,3 @@
-// src/pages/ChatPage.tsx
 import { useEffect } from "react";
 import { Chat } from "../../components/chat/Chat";
 import { SocketEventHandler } from "../../components/socket/SocketEventHandler";
