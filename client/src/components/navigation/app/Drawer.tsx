@@ -16,6 +16,15 @@ interface User {
     createdAt: Date;
 }
 
+interface UserGroupProps {
+    title: string;
+    role: string;
+    users: User[];
+    onAction: (userId: string) => void;
+    icon: JSX.Element;
+    detailsOpen?: boolean;
+  };
+
 export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps): JSX.Element {
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
     const API_URL = import.meta.env.VITE_API_URL;
@@ -34,7 +43,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         };
 
         fetchChannels();
-    }, [setChannels]);
+    }, []);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -49,7 +58,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         };
 
         fetchUsers();
-    }, [setUsers]);
+    }, []);
 
     const handleValidateUser = async (userId: string) => {
         try {
@@ -85,6 +94,24 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         }
     };
 
+    const UserGroup = ({ title, role, users, onAction, icon, detailsOpen = false }: UserGroupProps) => (
+        <details open={detailsOpen}>
+            <summary>{title}</summary>
+            <ul>
+                {users
+                .filter((user) => user.role === role)
+                .map((user) => (
+                    <div key={user._id} className="flex justify-between items-center">
+                    <li className="my-1">{user.username}</li>
+                    <button onClick={() => onAction(user._id)} title={`${title} action`}>
+                        {icon}
+                    </button>
+                    </div>
+                ))}
+            </ul>
+        </details>
+    );
+
     return (
         <div className={`drawer ${isOpen ? "drawer-open w-full max-w-xs" : "w-0"} `}>
             <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={isOpen} readOnly />
@@ -94,46 +121,27 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                     {isAdminPanelUserisOpen ? (
                         <li>
                             <h2 className="menu-title">Users</h2>
-                            <details open>
-                                <summary>Visitor</summary>
-                                <ul>
-                                    {users
-                                        .filter((user) => user.role === "visitor")
-                                        .map((user) => (
-                                        <div className="flex justify-between items-center">
-                                            <li key={user._id} className="my-1">{user.username}</li>
-                                            <button onClick={() => handleValidateUser(user._id)} title="Validate user">
-                                                <FaCircleCheck size={18} className="mr-1"/>
-                                            </button>
-                                        </div>
-                                    ))}                            
-                                </ul>
-                            </details>
-                            <details open={false}>
-                                <summary>GamerZ</summary>
-                                <ul>
-                                    {users
-                                        .filter((user) => user.role === "gamer")
-                                        .map((user) => (
-                                        <div className="flex justify-between items-center">
-                                            <li key={user._id} className="my-1">{user.username}</li>
-                                            <button onClick={() => handleBanUser(user._id)} title="Ban user">
-                                                <FaCircleXmark size={18} className="mr-1" color="red"/>
-                                            </button>
-                                        </div>
-                                    ))}                            
-                                </ul>
-                            </details>
-                            <details open={false}>
-                                <summary>Banned</summary>
-                                <ul>
-                                    {users
-                                        .filter((user) => user.role === "banned")
-                                        .map((user) => (
-                                        <li key={user._id} className="my-1">{user.username}</li>
-                                    ))}                            
-                                </ul>
-                            </details>
+                            <UserGroup
+                                title="Visitor"
+                                role="visitor"
+                                users={users}
+                                onAction={handleValidateUser}
+                                icon={<FaCircleCheck size={18} className="mr-1" />}
+                            />
+                            <UserGroup
+                                title="GamerZ"
+                                role="gamer"
+                                users={users}
+                                onAction={handleBanUser}
+                                icon={<FaCircleXmark size={18} className="mr-1" color="red" />}
+                            />
+                            <UserGroup
+                                title="Banned"
+                                role="banned"
+                                users={users}
+                                onAction={handleValidateUser}
+                                icon={<FaCircleCheck size={18} className="mr-1" />}
+                            />
                         </li>
                     ) : (
                         <li>
