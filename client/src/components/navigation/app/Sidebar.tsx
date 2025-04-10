@@ -2,15 +2,18 @@ import { JSX } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../../../assets/Logo_GamerZ_rmBG.png";
 import Logout from "../../../assets/logout.png";
-import AdminPanelUser from "../../../assets/user.png";
 import { useAuth } from "../../../context/AuthContext";
+import { FaRegCircleUser, FaCircleArrowLeft  } from "react-icons/fa6";
 
 interface SidebarProps {
     toggleDrawer: () => void;
+    isAdminPanelUserisOpen: boolean;
     toggleAdminPanelUser: () => void;
 }
 
-export default function Sidebar({ toggleDrawer, toggleAdminPanelUser }: SidebarProps): JSX.Element {
+// <FaCircleArrowLeft />
+
+export default function Sidebar({ toggleDrawer, isAdminPanelUserisOpen, toggleAdminPanelUser }: SidebarProps): JSX.Element {
     const { user, logout } = useAuth();
 
     return (
@@ -21,7 +24,11 @@ export default function Sidebar({ toggleDrawer, toggleAdminPanelUser }: SidebarP
                 </button>
                 {user && user.role === "admin" ? (
                     <button onClick={toggleAdminPanelUser} className="btn btn-ghost drawer-button w-full mb-5">
-                        <img src={AdminPanelUser} alt="Admin Panel User" className="w-7 h-7" />
+                        {isAdminPanelUserisOpen === false ? (
+                            <FaRegCircleUser size={30} color="white" />
+                        ) : (
+                            <FaCircleArrowLeft size={30} color="white" />
+                        )}
                     </button>
                 ) : (
                     <></>
