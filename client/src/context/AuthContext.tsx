@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -12,14 +12,35 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (username: string, email: string, password: string, motivation: string) => Promise<void>;
+    loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<AuthContextType["user"]>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
+
+    // Vérifier l'utilisateur au chargement
+    useEffect(() => {
+        const checkUser = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/api/auth/me`, {
+                    withCredentials: true,
+                });
+                setUser(res.data.user);
+            } catch (error) {
+                console.error("Failed to fetch user:", error);
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkUser();
+    }, []);
 
     const login = async (email: string, password: string) => {
         try {
@@ -73,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register }}>
+        <AuthContext.Provider value={{ user, login, logout, register, loading }}>
             {children}
         </AuthContext.Provider>
     );

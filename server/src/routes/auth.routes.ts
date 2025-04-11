@@ -3,6 +3,7 @@ import { Router } from "express";
 import { Request, Response, NextFunction } from "express";
 import {register, login, logout} from "../controllers/auth.controller";
 import { body, validationResult } from "express-validator";
+import { authenticate } from "../middleware/authenticate";
 
 const router = Router();
 
@@ -42,5 +43,9 @@ router.post(
 );
 
 router.post("/logout", logout);
+
+router.get("/me", authenticate, (req: Request, res: Response) => {
+    res.json({ user: req.user });
+});
 
 export default router;
