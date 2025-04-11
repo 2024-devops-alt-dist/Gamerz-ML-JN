@@ -13,8 +13,8 @@ import { ChatPage } from "./pages/app/ChatPage";
 
 export default function App(): JSX.Element {
   return (
-    <AuthProvider>
-      <ToastProvider>
+    <ToastProvider>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<WebLayout />}>
             <Route index element={<Home />} />
@@ -31,7 +31,7 @@ export default function App(): JSX.Element {
             </Route>
           </Route>
         </Routes>
-      </ToastProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }

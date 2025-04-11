@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "./ToastContext";
 
 interface AuthContextType {
     user: {
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
+    const { show } = useToast();
 
     // Vérifier l'utilisateur au chargement
     useEffect(() => {
@@ -57,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             );
             console.log("login response:", res.data);
             setUser(res.data.user);
+            show(`✅ Connected, have a nice day ${res.data.user.username}`, "success")
             navigate("/app");
         } catch (error) {
             console.error('Login failed:', error);
@@ -69,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             credentials: "include",
         });
         setUser(null);
+        show("You're logged out !", "success")
         navigate("/");
     };
 
@@ -88,8 +92,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 }
             );
             console.log("register response:", res.data);
+            show("✅ Register succesfully !", "success")
         } catch (error) {
             console.error('Registration failed:', error);
+            show("❌ Registration failed !", "success")
         }
     };
 

@@ -47,6 +47,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                 setChannels(response.data);
             } catch (error) {
                 console.error("Failed to fetch channels:", error);
+                show("❌ Failed to fetch channels", "error");
             }
         };
 
@@ -62,6 +63,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                 setUsers(response.data);
             } catch (error) {
                 console.error("Failed to fetch users:", error);
+                show("❌ Failed to fetch users", "error");
             }
         };
 
@@ -86,10 +88,10 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
 
             // Toast
             const user = users.find((u) => u._id === userId);
-            show(`✅ ${user?.username || "Utilisateur"} validé`, "success");
+            show(`✅ ${user?.username || "User"} validate`, "success");
         } catch (error) {
-            console.error("Failed to validate user :", error);
-            show("❌ Erreur lors de la validation", "error");
+            console.error("Failed to validate user:", error);
+            show("❌ Failed to validate user", "error");
         }
     };
 
@@ -111,10 +113,10 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
 
             // Toast
             const user = users.find((u) => u._id === userId);
-            show(`🚫 ${user?.username || "Utilisateur"} banni`, "success");
+            show(`🚫 ${user?.username || "User"} banned`, "success");
         } catch (error) {
-            console.error("Failed to ban user :", error);
-            show("❌ Erreur lors du bannissement", "error");
+            console.error("Failed to ban user:", error);
+            show("❌ Failed to ban user", "error");
         }
     };
 
