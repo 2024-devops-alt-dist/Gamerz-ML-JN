@@ -4,6 +4,7 @@ import { useToast } from "../../../context/ToastContext";
 import axios from "axios";
 import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
 import ConfirmActionModal from "./ConfirmActionModal";
+import { useAuth } from "../../../context/AuthContext";
 
 interface DrawerProps {
     isOpen: boolean;
@@ -28,6 +29,7 @@ interface UserGroupProps {
 
 export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps): JSX.Element {
     const { channels, setChannels, joinChannel, currentChannel } = useChatStore();
+    const { user } = useAuth();
     const API_URL = import.meta.env.VITE_API_URL;
     const [ users, setUsers ] = useState<User[]>([]);
     const [confirmationModal, setConfirmationModal] = useState<{
@@ -54,21 +56,23 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         fetchChannels();
     }, []);
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/api/users`, {
-                    withCredentials: true,
-                });
-                setUsers(response.data);
-            } catch (error) {
-                console.error("Failed to fetch users:", error);
-                show("❌ Failed to fetch users", "error");
-            }
-        };
-
-        fetchUsers();
-    }, []);
+    if (user?.role === "admin") {
+        useEffect(() => {
+            const fetchUsers = async () => {
+                try {
+                    const response = await axios.get(`${API_URL}/api/users`, {
+                        withCredentials: true,
+                    });
+                    setUsers(response.data);
+                } catch (error) {
+                    console.error("Failed to fetch users:", error);
+                    show("❌ Failed to fetch users", "error");
+                }
+            };
+    
+            fetchUsers();
+        }, []);
+    }
 
     const handleValidateUser = async (userId: string) => {
         try {
