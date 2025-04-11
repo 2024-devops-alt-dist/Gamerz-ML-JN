@@ -8,3 +8,8 @@
     --color-secondary: oklch(39% 0.195 277.366);
     --color-secondary-content: oklch(94% 0.028 342.258);
 }
+
+.chat-bubble:before {
+    position: relative !important;
+    /* Add any other properties you want to override */
+}
