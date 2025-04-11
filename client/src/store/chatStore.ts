@@ -8,6 +8,12 @@ interface Message {
     username: string;
     content: string;
     createdAt: Date;
+    replyTo?: {
+        _id?: string;
+        userId: string;
+        username: string;
+        content: string;
+    } | null;
 }
 
 interface Channel {
@@ -22,7 +28,7 @@ interface ChatStore {
     messages: Record<string, Message[]>;
     setChannels: (channels: Channel[]) => void;
     joinChannel: (channelId: string) => void;
-    sendMessage: (content: string, userId: string, username: string) => void;
+    sendMessage: (content: string, userId: string, username: string, replyTo: Message | null) => void;
     addMessage: (message: Message) => void;
     setMessages: (channelId: string, messages: Message[]) => void;
 }
@@ -50,7 +56,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         }
     },
 
-    sendMessage: (content, userId, username) => {
+    sendMessage: (content: string, userId: string, username: string, replyTo: Message | null = null) => {
         const { socket } = useSocketStore.getState();
         const channelId = get().currentChannel;
 
@@ -59,7 +65,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
                 channelId,
                 userId,
                 username,
-                content
+                content,
+                replyTo: replyTo ? {
+                    _id: replyTo._id,
+                    userId: replyTo.userId,
+                    username: replyTo.username,
+                    content: replyTo.content
+                } : null
             });
         }
     },
