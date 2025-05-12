@@ -138,7 +138,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                 .filter((user) => user.role === role)
                 .map((user) => (
                     <div key={user._id} className="flex justify-between items-center">
-                    <li className="my-1">{user.username}</li>
+                    <li className="px-3 py-2 rounded">{user.username}</li>
                     <button
                         onClick={() => {
                             setConfirmationModal({
@@ -149,6 +149,7 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                             });
                             (document.getElementById("confirmModal") as HTMLDialogElement).showModal();
                         }}
+                        className="cursor-pointer"
                     >
                         {icon}
                     </button>
@@ -201,15 +202,21 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                         <li>
                             <h2 className="menu-title">Channels</h2>
                             <ul>
-                                {channels.map((channel) => (
-                                    <li
-                                        key={channel._id}
-                                        className={channel._id === currentChannel ? "active" : ""}
-                                        onClick={() => channel._id && joinChannel(channel._id)}
-                                    >
-                                        {channel.name}
-                                    </li>
-                                ))}
+                                {channels.map((channel) => {
+                                    const isActive = channel._id === currentChannel;
+                                    return (
+                                        <li
+                                            key={channel._id}
+                                            onClick={() => channel._id && joinChannel(channel._id)}
+                                            className={`my-1 px-3 py-2 rounded cursor-pointer transition-colors
+                                                ${isActive
+                                                    ? "bg-primary text-white font-bold shadow-md"
+                                                    : "hover:bg-neutral text-white "}`}
+                                        >
+                                            {channel.name}
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         </li>
                     )}
