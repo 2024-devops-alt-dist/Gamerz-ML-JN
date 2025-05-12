@@ -1,9 +1,15 @@
-import { JSX } from "react";
+import { JSX, useState } from "react";
 import BannerImage from "../../assets/banner.png";
 import Jimmy from "../../assets/jimmy.jpg";
 import Mathieu from "../../assets/mathieu.jpg";
 
 export default function Careers(): JSX.Element {
+    const [current, setCurrent] = useState(0);
+    const slides = [Jimmy, Mathieu];
+  
+    const next = () => setCurrent((prev) => (prev + 1) % slides.length);
+    const prev = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+
     return (
         <div>
             <section
@@ -31,24 +37,15 @@ export default function Careers(): JSX.Element {
                         we’re building GamerZ to be the perfect place to talk while playing games on any platform, no matter what device you play on.
                     </p>
                 </div>
-                <div className="carousel m-auto w-full max-w-95 rounded-4xl">
-                    <div id="slide1" className="carousel-item relative w-full">
-                        <img
-                            src={Jimmy}
-                            className="w-full" />
-                        <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                            <a href="#slide2" className="btn btn-circle">❮</a>
-                            <a href="#slide2" className="btn btn-circle">❯</a>
-                        </div>
+                <div className="relative w-full max-w-xl mx-auto overflow-hidden rounded-2xl">
+                    <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${current * 100}%)` }}>
+                        {slides.map((img, i) => (
+                        <img key={i} src={img} className="w-full flex-shrink-0" />
+                        ))}
                     </div>
-                    <div id="slide2" className="carousel-item relative w-full">
-                        <img
-                            src={Mathieu}
-                            className="w-full" />
-                        <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                            <a href="#slide1" className="btn btn-circle">❮</a>
-                            <a href="#slide1" className="btn btn-circle">❯</a>
-                        </div>
+                    <div className="absolute inset-0 flex items-center justify-between px-5">
+                        <button onClick={prev} className="btn btn-circle bg-base-200/70">❮</button>
+                        <button onClick={next} className="btn btn-circle bg-base-200/70">❯</button>
                     </div>
                 </div>
             </section>

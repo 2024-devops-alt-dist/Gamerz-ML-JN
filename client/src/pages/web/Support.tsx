@@ -1,6 +1,7 @@
 import { JSX } from "react";
 import BannerImage from "../../assets/banner.png";
 import SupportCard from "../../components/SupportCard";
+import { helpCards, otherHelpCards } from "../../context/HelpCardFixtures";
 
 export default function Support(): JSX.Element {
 
@@ -24,27 +25,31 @@ export default function Support(): JSX.Element {
             </section>
             <section className="grid grid-col-1 justify-items-center bg-white p-10">
                 <div className="max-w-md">
-                    <h2 className="mb-5 text-3xl text-neutral font-bold">Need help? We've got your back.</h2>
-                    <p className="mb-5 text-xl text-neutral">
+                    <h2 className="mb-5 text-3xl text-neutral text-center font-bold">Need help? We've got your back.</h2>
+                    <p className="mb-5 text-xl text-neutral text-center">
                         From gaming, to music, to learning, there's a place for you.
                     </p>
                 </div>
                 <section className="flex flex-wrap justify-center gap-4 mt-4">
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
+                    {helpCards.map((card, index) => (
+                        <SupportCard
+                            key={index}
+                            icon={card.icon}
+                            title={card.title}
+                            description={card.description}
+                        />
+                    ))}
                 </section>
                 <h2 className="my-5 text-3xl text-neutral font-bold">Other ways to find help.</h2>
                 <section className="flex flex-wrap justify-center gap-4 mt-4">
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
-                    <SupportCard />
+                    {otherHelpCards.map((card, index) => (
+                        <SupportCard
+                            key={index}
+                            icon={card.icon}
+                            title={card.title}
+                            description={card.description}
+                        />
+                    ))}
                 </section>
             </section>
         </div>
