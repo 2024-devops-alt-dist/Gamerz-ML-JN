@@ -1,24 +1,31 @@
 import { JSX } from "react";
 
-export default function DiscoverCard(): JSX.Element {
+type DiscoverCardProps = {
+    image: string;
+    title: string;
+    description: string;
+    badges: string[];
+    isNew?: boolean;
+};
+
+export default function DiscoverCard({ image, title, description, badges, isNew = false }: DiscoverCardProps): JSX.Element {
     return (
         <div className="card card-side bg-base-100 w-full shadow-sm">
             <figure>
-                <img
-                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                    alt="Shoes" />
+                <img src={image} alt={title} className="h-full w-36 object-cover" />
             </figure>
             <div className="card-body">
                 <h2 className="card-title">
-                    Card Title
-                    <div className="badge badge-secondary">NEW</div>
+                    {title}
+                    {isNew && <div className="badge badge-secondary">NEW</div>}
                 </h2>
-                <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                <div className="card-actions justify-end">
-                    <div className="badge badge-outline">Fashion</div>
-                    <div className="badge badge-outline">Products</div>
+                <p>{description}</p>
+                <div className="card-actions justify-end flex-wrap gap-2">
+                    {badges.map((badge, index) => (
+                        <div key={index} className="badge badge-outline">{badge}</div>
+                    ))}
                 </div>
             </div>
         </div>
-    )
+    );
 }

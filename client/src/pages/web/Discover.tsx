@@ -2,6 +2,35 @@ import { JSX } from "react";
 import BannerImage from "../../assets/banner.png";
 import DiscoverCard from "../../components/DiscoverCard";
 
+const discoverCards = [
+    {
+        image: "https://tse4.mm.bing.net/th?id=OIP.DfH6LbKjC_9XoPsEdqyUhAHaE8&w=316&h=316&c=7",
+        title: "Gaming Communities",
+        description: "Join active servers dedicated to gaming, tournaments and support",
+        badges: ["Gaming", "Community"],
+        isNew: true,
+    },
+    {
+        image: "https://tse2.mm.bing.net/th?id=OIP.cSPcYqqrQBlnhyZf8t-wBQHaEH&w=263&h=263&c=7",
+        title: "E-Learning",
+        description: "Explore servers dedicated to learning new skills",
+        badges: ["Education", "Language"],
+    },
+    {
+        image: "https://tse2.mm.bing.net/th?id=OIP.iEo8mHAdU6baQVM_KYmL5QHaHa&w=474&h=474&c=7",
+        title: "Music & Chill",
+        description: "Listen and share your music with other fans",
+        badges: ["Music", "Recreation"],
+    },
+    {
+        image: "https://tse4.mm.bing.net/th?id=OIP.l-GKXxGLEeLgjyA4O6viEAHaE8&w=316&h=316&c=7",
+        title: "Web Development",
+        description: "Collaborates and progresses with other fullstack developers",
+        badges: ["Dev", "Code"],
+        isNew: true,
+    },
+];
+
 export default function Discover(): JSX.Element {
     return (
         <div>
@@ -82,10 +111,16 @@ export default function Discover(): JSX.Element {
                         </ul>
                     </div>
                     <div className="col-span-2 grid gap-6 pt-5">
-                        <DiscoverCard />
-                        <DiscoverCard />
-                        <DiscoverCard />
-                        <DiscoverCard />
+                        {discoverCards.map((card, index) => (
+                            <DiscoverCard
+                                key={index}
+                                image={card.image}
+                                title={card.title}
+                                description={card.description}
+                                badges={card.badges}
+                                isNew={card.isNew}
+                            />
+                        ))}
                     </div>
                 </section>
             </section>
