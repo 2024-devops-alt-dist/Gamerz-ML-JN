@@ -67,8 +67,9 @@ app.use("/api/channels", channelRoutes);
 
 connectDB()
     .then(() => {
-        httpServer.listen(PORT, '127.0.0.1', () => {
-            console.log(`🚀 Server running on http://127.0.0.1:${PORT}`);
+        // httpServer.listen(PORT, '127.0.0.1', () => {
+        httpServer.listen(PORT, '0.0.0.0', () => {
+            console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
         });
     })
     .catch((err) => {
