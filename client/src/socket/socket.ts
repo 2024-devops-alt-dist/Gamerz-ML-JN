@@ -10,7 +10,7 @@ interface SocketStore {
 export const useSocketStore = create<SocketStore>((set) => ({
     socket: null,
     connect: () => {
-        const socket = io("http://localhost:3000");
+        const socket = io("https://gamerz-ml-jn.onrender.com");
         socket.on("connect", () => {
             console.log("Connected to socket server");
         });
