@@ -96,30 +96,46 @@ export const Chat = ({ userId, username }: ChatProps) => {
                 ) : (
                     <>
                         {channelMessages.map((msg) => (
-                            <div className="px-2 font-extralight" key={msg._id} onContextMenu={(e) => handleContextMenu(e, msg as Message)}>
-                                    {msg.replyTo && (
-                                        <div className={`flex text-sm mt-2 ${msg.userId === userId ? "flex-row-reverse pr-10" : "flex-row pl-10"}`}>
-                                            <div className={`h-4 mt-6 mr-1 opacity-50 text-transparent border-gray-50 border-t rounded-b-none rounded 
-                                                ${msg.userId === userId ? "border-r rounded-l-none" : "border-l  rounded-r-none"} `}
-                                            >----</div>
-                                            <div className={`flex flex-col w-full ${msg.userId === userId ? "items-end pr-0.5" : "items-start"}`}>
-                                                <div className="
-                                                    opacity-50 chat-header">{msg.replyTo.username}
-                                                </div>
-                                                <div className={`
-                                                    opacity-50 chat-bubble  min-h-1 w-fit text-center content-center py-0 px-2 ${msg.userId || msg.replyTo.userId === userId ? "chat-end bg-primary/50" : "chat-start"}`}>{msg.replyTo.content}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                <div className={`chat flex flex-col p-0 ${msg.userId === userId ? "chat-end" : "chat-start"}`}>
-                                    <div className="chat-header p-0">
-                                        {msg.username}
-                                        <time className="text-xs opacity-50">{formatMessageTime(msg.createdAt, currentTime)}</time>
-                                    </div>
-                                    <div className={`chat-bubble min-h-1/2 px-2 p-0 ${msg.userId === userId ? "chat-end bg-primary/50" : "chat-start"}`}>{msg.content}</div>
+                        <div
+                            key={msg._id}
+                            onContextMenu={(e) => handleContextMenu(e, msg as Message)}
+                            className={`flex flex-col px-4 py-2 gap-1 ${msg.userId === userId ? "items-end" : "items-start"}`}
+                        >
+                            {msg.replyTo && (
+                            <div className={`relative flex items-start w-full max-w-md ${msg.userId === userId ? "flex-row-reverse" : ""}`}>
+                                <div className={`
+                                    h-4 mt-6 text-transparent border-gray-300 border-t rounded-b-none rounded 
+                                    ${msg.userId === userId
+                                    ? "border-r rounded-l-none mr-5"
+                                    : "border-l rounded-r-none ml-5"}
+                                `}>
+                                    ---
+                                </div>
+
+                                <div className={`flex flex-col bg-base-200 rounded-lg px-3 py-1 text-sm shadow-sm max-w-[80%] 
+                                ${msg.userId === userId ? "items-end mr-2" : "items-start ml-2"}`}>
+                                    <span className="font-semibold text-xs text-primary">
+                                        {msg.replyTo.username}
+                                    </span>
+                                    <span className="text-xs italic text-neutral-content">
+                                        {msg.replyTo.content}
+                                    </span>
                                 </div>
                             </div>
+                            )}
+
+                            <div className={`chat ${msg.userId === userId ? "chat-end" : "chat-start"} w-full max-w-md`}>
+                            <div className="chat-header text-sm font-semibold">
+                                {msg.username}
+                                <time className="ml-2 text-xs opacity-50">
+                                {formatMessageTime(msg.createdAt, currentTime)}
+                                </time>
+                            </div>
+                            <div className={`chat-bubble px-4 py-2 break-words ${msg.userId === userId ? "bg-primary text-white" : "bg-secondary/40 text-white"}`}>
+                                {msg.content}
+                            </div>
+                            </div>
+                        </div>
                         ))}
                         <div ref={messagesEndRef} />
                     </>
