@@ -2,7 +2,7 @@ import { JSX, useEffect, useState } from "react";
 import { useChatStore } from "../../../store/chatStore";
 import { useToast } from "../../../context/ToastContext";
 import axios from "axios";
-import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
+import { FaCircleCheck, FaCircleXmark, FaPlus } from "react-icons/fa6";
 import ConfirmActionModal from "./ConfirmActionModal";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -32,7 +32,10 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
     const { user } = useAuth();
     const API_URL = import.meta.env.VITE_API_URL;
     const [ users, setUsers ] = useState<User[]>([]);
-    const [confirmationModal, setConfirmationModal] = useState<{
+    const [ isActive, setIsActive ] = useState<boolean>(false);
+    const [ newChannelName, setNewChannelName ] = useState("");
+    const [ loading, setLoading ] = useState<boolean>(false);
+    const [ confirmationModal, setConfirmationModal ] = useState<{
         userId: string;
         username: string;
         motivation: string;
@@ -41,6 +44,8 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
     const { show } = useToast();
 
     useEffect(() => {
+        if (!user || user?.role === "visitor") return;
+
         const fetchChannels = async () => {
             try {
                 const response = await axios.get(`${API_URL}/api/channels`, {
@@ -54,25 +59,45 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
         };
 
         fetchChannels();
-    }, []);
+    }, [loading]);
 
-    if (user?.role === "admin") {
-        useEffect(() => {
-            const fetchUsers = async () => {
-                try {
-                    const response = await axios.get(`${API_URL}/api/users`, {
-                        withCredentials: true,
-                    });
-                    setUsers(response.data);
-                } catch (error) {
-                    console.error("Failed to fetch users:", error);
-                    show("❌ Failed to fetch users", "error");
-                }
-            };
-    
-            fetchUsers();
-        }, []);
-    }
+    useEffect(() => {
+        if (!user || user?.role != "admin") return;
+
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/api/users`, {
+                    withCredentials: true,
+                });
+                setUsers(response.data);
+            } catch (error) {
+                console.error("Failed to fetch users:", error);
+                show("❌ Failed to fetch users", "error");
+            }
+        };
+
+        fetchUsers();
+    }, [user]);
+
+    const handleCreateChannel = async (name: string) => {
+        try {
+            // Call to back-end
+            await axios.post(
+                `${API_URL}/api/channels/`,
+                { name },
+                { withCredentials: true, }
+            );
+
+            setLoading(!loading);
+            setIsActive(false);
+            setNewChannelName("");
+            // Toast
+            show("✅ Channel created", "success");
+        } catch (error) {
+            console.error("Failed to validate user:", error);
+            show("❌ Failed to validate user", "error");
+        }
+    };
 
     const handleValidateUser = async (userId: string) => {
         try {
@@ -200,9 +225,44 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                         </li>
                     ) : (
                         <li>
-                            <h2 className="menu-title">Channels</h2>
+                            <div className="flex justify-between">
+                                <h2 className="menu-title">Channels</h2>
+                                {user?.role === "admin" ? (
+                                    <button
+                                        onClick={() => setIsActive(!isActive)}
+                                        className="cursor-pointer"
+                                    >
+                                        <FaPlus />
+                                    </button>
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                            {isActive ? (
+                                <div className="join">
+                                    <div>
+                                        <label className="input validator join-item">
+                                        <input
+                                            type="string"
+                                            placeholder="Channel name" 
+                                            value={newChannelName}
+                                            onChange={(e) => setNewChannelName(e.target.value)}
+                                            required
+                                        />
+                                        </label>
+                                        <div className="validator-hint hidden">Enter channel name</div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleCreateChannel(newChannelName)}
+                                        className="btn btn-neutral join-item"
+                                        >Add</button>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
                             <ul>
-                                {channels.map((channel) => {
+                                {user?.role != "visitor" ? (
+                                    channels.map((channel) => {
                                     const isActive = channel._id === currentChannel;
                                     return (
                                         <li
@@ -216,7 +276,10 @@ export default function Drawer({ isOpen, isAdminPanelUserisOpen }: DrawerProps):
                                             {channel.name}
                                         </li>
                                     );
-                                })}
+                                })
+                                ) : (
+                                    <p>You need to be validated to see channels </p>
+                                )}
                             </ul>
                         </li>
                     )}
