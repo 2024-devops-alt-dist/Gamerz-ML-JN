@@ -3,6 +3,7 @@ import { getDB } from "../connect";
 import { User } from "../types/User";
 import { ObjectId, WithId } from "mongodb";
 import { UserRole } from "../types/Role";
+import {sendValidationEmail} from "../utils/emailService";
 
 export const deleteUser = async (
     req: Request,
@@ -39,6 +40,13 @@ export const approveUser = async (
         const db = getDB();
         const usersCollection = db.collection<User>("user");
 
+        const user = await usersCollection.findOne({ _id: userId });
+
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
         const result = await usersCollection.updateOne(
             { _id: userId },
             {
@@ -52,7 +60,7 @@ export const approveUser = async (
             res.status(404).json({ message: "User not found" });
             return;
         }
-
+        await sendValidationEmail(user.email, user.username);
         res.status(200).json({ message: "User approved and role updated" });
     } catch (error) {
         next(error);
