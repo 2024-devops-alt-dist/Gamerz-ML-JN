@@ -1,9 +1,12 @@
+import {UserRole} from "./Role";
+import {ObjectId} from "mongodb";
+
 export interface User {
-    _id?: string;
-    username: string;
-    email: string;
-    password: string;
-    motivation: string;
-    isApproved: boolean;
-    createdAt: Date;
+    userId?: ObjectId
+    username: string
+    email: string
+    password: string
+    motivation: string
+    role: UserRole
+    createdAt: Date
 }

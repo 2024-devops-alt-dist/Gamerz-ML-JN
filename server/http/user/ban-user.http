@@ -1,0 +1,4 @@
+### Delete user by ID
+PUT {{baseUrl}}/users/67d05c497387b677792c1cde/ban
+Content-Type: {{contentType}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2QwNWM3ZjczODdiNjc3NzkyYzFjZGYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDE3NzQ2MzYsImV4cCI6MTc0MTg2MTAzNn0.7c4KsqHVSEm9EOCkSwdku6itJMHe_RJGltm4T951izw

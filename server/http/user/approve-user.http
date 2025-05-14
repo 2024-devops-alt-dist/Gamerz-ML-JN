@@ -1,0 +1,4 @@
+### Delete user by ID
+PUT {{baseUrl}}/users/67d2d86bdf1ff81dc76c43f9/approve
+Content-Type: {{contentType}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2QwNWM3ZjczODdiNjc3NzkyYzFjZGYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDE4ODAxOTgsImV4cCI6MTc0MTk2NjU5OH0.gQFvYhjfS6RQN0Gq011DsCdsCu89SqtNHJmaEOfzK-A
